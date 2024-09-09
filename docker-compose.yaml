@@ -1,0 +1,17 @@
+services:
+  example-service:
+    container_name: example-service-java
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+
+    healthcheck:
+      test: wget --no-clobber --spider http://localhost:8081/actuator/health/readiness || exit 1
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 3s

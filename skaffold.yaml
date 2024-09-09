@@ -1,0 +1,16 @@
+apiVersion: skaffold/v2beta29
+kind: Config
+build:
+  artifacts:
+    - image: hello-world-api
+      custom:
+        buildCommand: ./build.sh
+        dependencies:
+          paths:
+            - src/**/*
+            - pom.xml
+            - Dockerfile
+deploy:
+  kubectl:
+    manifests:
+      - k8s-*.yaml
