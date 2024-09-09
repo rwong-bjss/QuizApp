@@ -20,6 +20,36 @@ This configuration:
 Defines a Deployment and a LoadBalancer Service for the application.
 
 ## Dockerfile
+This Dockerfile:
+1. Uses OpenJDK 17 as the base image.
+2. Copies the built JAR file into the container.
+3. Sets the command to run the JAR file.
+
+## Custom Build Script (build.sh)
+
+This script:
+1. Runs a Maven clean install.
+2. Builds a Docker image using the Dockerfile.
+
+## How It Works
+
+1. When you run `skaffold dev`:
+    - Skaffold watches for changes in the specified paths.
+    - On changes, it triggers the `build.sh` script.
+    - The script builds the Java application and creates a Docker image.
+    - Skaffold deploys the updated image to Kubernetes using the k8s-deployment.yaml.
+
+2. The Kubernetes deployment creates a pod running your application.
+
+3. The LoadBalancer service exposes your application on port 8080.
+
+## Usage
+
+1. Ensure you have Skaffold, Docker, and Kubernetes (or Minikube) installed.
+2. Run `skaffold dev` in the project root.
+3. Make changes to your code, and Skaffold will automatically rebuild and redeploy.
+
+This setup provides a streamlined development workflow for your Spring Boot application, allowing for quick iterations and easy deployment to a Kubernetes environment.
 
 ### Troubleshoooting Skaffold
 
