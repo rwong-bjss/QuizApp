@@ -13,10 +13,17 @@ spec:
         app: hello-world-api
     spec:
       containers:
-        - name: hello-world-api
-          image: hello-world-api
-          ports:
-            - containerPort: 8080
+      - name: hello-world-api
+        image: hello-world-api
+        ports:
+        - containerPort: 8080
+        env:
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:postgresql://postgres:5432/userdb
+        - name: SPRING_DATASOURCE_USERNAME
+          value: user
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: password
 ---
 apiVersion: v1
 kind: Service

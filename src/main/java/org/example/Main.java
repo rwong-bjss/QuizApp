@@ -14,6 +14,6 @@ public class Main {
 
     @GetMapping("/hello")
     public String helloWorld() {
-        return "Hello Rachel!";
+        return "Hello Rachel, have a nice day!";
     }
 }

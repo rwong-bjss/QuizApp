@@ -1,0 +1,194 @@
+openapi: 3.0.0
+info:
+  title: Quiz App
+  description: A simple API to manage a quiz stored in memory.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Local server
+
+paths:
+  /quiz/start:
+    post:
+      summary: Start a new quiz with a name
+      operationId: postQuizStart
+      requestBody:
+        description: start the quiz
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InitialUser'
+      responses:
+        '200':
+          description: The requested to-do item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Issue with contents
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Issue with service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /quiz/question:
+    get:
+      summary: get a question
+      operationId: GetQuestion
+      parameters:
+        - in: header
+          name: sessionId
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        '200':
+          description: A question
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /quiz/answer:
+    post:
+      summary: Post a quiz answer
+      operationId: postQuizAnswer
+      parameters:
+        - in: header
+          name: sessionId
+          schema:
+            type: string
+            format: uuid
+          required: true
+      requestBody:
+        description: The question answer
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Answer'
+      responses:
+        '200':
+          description: Results of the answer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuestionAnswer'
+        '400':
+          description: Bad Request (e.g., item with the same ID already exists)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /quiz/results:
+    get:
+      summary: the results of the quiz, signals the end of the quiz
+      operationId: getQuizResults
+      parameters:
+        - in: header
+          name: sessionId
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        '200':
+          description: Results of the quiz
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+components:
+  schemas:
+    Question:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Question ID
+        type:
+          type: string
+          description: multiple, true false, short answer
+        category:
+          type: string
+          description: General knowledge
+        question:
+          type: string
+          description: question contents
+        options:
+          type: array
+          items:
+            type: string
+          description: answer options
+        number:
+          type: integer
+          description: which question number it is
+      required:
+        - id
+        - type
+        - question
+    Answer:
+      type: object
+      properties:
+        answer:
+          type: string
+          description: the question answer
+        questionId:
+          type: integer
+          description: unique identifier of the question
+    QuestionAnswer:
+      type: object
+      properties:
+        questionId:
+          type: integer
+          description: unique identifier of the question
+        correct_answer:
+          type: string
+          description: the correct answer
+    
+    InitialUser:
+      type: object
+      properties:
+        name:
+          type: string
+          description: the quiz user
+
+    User:
+      type: object
+      properties:
+        name:
+          type: string
+          description: the quiz user
+        sessionId:
+          type: string
+          description: unique identifier of the session
+        correctAnswers:
+          type: integer
+          description: number of correct answers
+        questionsAnswered:
+          type: integer
+          description: number of questions answered
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Error message
+      required:
+        - message

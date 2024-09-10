@@ -74,3 +74,73 @@ unset AWS_PROFILE
 When skaffold dev is running, any change you make will be automatically recompiled and built using a script
 Therefore you shouldn't need to rebuild and take down your container, changes will automatically deploy using skaffold.
 The rebuild happens because skaffold is triggering off the `build.sh` script to run mvn clean install whenever it detects changes 
+
+## Accessing the PostgreSQL Database
+
+To interact with the PostgreSQL database running in your Kubernetes cluster, follow these steps:
+
+1. First, ensure your Kubernetes cluster is running and the PostgreSQL pod is active:
+
+   ```
+   kubectl get pods
+   ```
+
+   Look for a pod with a name starting with `postgres-`.
+
+2. To enter the PostgreSQL pod, use the following command:
+
+   ```
+   kubectl exec -it <postgres-pod-name> -- /bin/bash
+   ```
+
+   Replace `<postgres-pod-name>` with the actual name of your PostgreSQL pod.
+
+3. Once inside the pod, connect to the PostgreSQL database using the psql client:
+
+   ```
+   psql -U user userdb
+   ```
+
+   This connects you to the `userdb` database using the username `user`.
+
+4. You're now in the PostgreSQL interactive terminal. Here are some useful commands:
+
+   - List all databases:
+     ```
+     \l
+     ```
+
+   - Connect to a specific database (if not already connected):
+     ```
+     \c userdb
+     ```
+
+   - List all tables in the current database:
+     ```
+     \dt
+     ```
+
+   - View the structure of a specific table:
+     ```
+     \d table_name
+     ```
+
+   - Execute a SQL query to view data:
+     ```
+     SELECT * FROM users;
+     ```
+
+   - Exit the PostgreSQL terminal:
+     ```
+     \q
+     ```
+
+5. To exit the pod's bash shell, simply type:
+
+   ```
+   exit
+   ```
+
+Remember to replace `user` and `userdb` with your actual PostgreSQL username and database name if they're different from the defaults used in the setup.
+
+Note: These instructions assume that your Kubernetes cluster and PostgreSQL deployment are set up correctly. Make sure you have the necessary permissions to execute these commands in your cluster.
