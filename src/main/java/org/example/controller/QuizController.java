@@ -1,44 +1,58 @@
 package org.example.controller;
 
-import org.example.service.QuizService;
+import org.example.dto.UserDto;
+import org.example.model.Answer;
+import org.example.model.InitialUser;
+import org.example.model.Question;
+import org.example.model.QuestionAnswer;
+import org.example.service.UserService;
+import org.example.service.TriviaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.UUID;
 
-///todo DELETE ME
+@RestController
+@RequestMapping("/quiz")
+public class QuizController {
 
-//@RestController
-//@RequestMapping("/api/quiz")
-//public class QuizController {
-//
-//    private final QuizService quizService;
-//
-//    @Autowired
-//    public QuizController(QuizService quizService) {
-//        this.quizService = quizService;
-//    }
-//
-//    @PostMapping("/users")
-//    public ResponseEntity<User> createUser(@RequestParam String name) {
-//        User user = quizService.createUser(name);
-//        return ResponseEntity.ok(user);
-//    }
-//
-//    @PutMapping("/users/{session}/answer")
-//    public ResponseEntity<User> updateUserScore(
-//            @PathVariable String session,
-//            @RequestParam boolean isCorrect,
-//            @RequestParam Long questionId) {
-//        User user = quizService.updateUserScore(session, isCorrect, questionId);
-//        return ResponseEntity.ok(user);
-//    }
-//
-//    @GetMapping("/users/{session}")
-//    public ResponseEntity<User> getUser(@PathVariable String session) {
-//        User user = quizService.getUserBySession(session);
-//        if (user == null) {
-//            return ResponseEntity.notFound().build();
-//        }
-//        return ResponseEntity.ok(user);
-//    }
-//}
+    private final UserService userService;
+    private final TriviaService triviaService;
+
+    @Autowired
+    public QuizController(UserService userService, TriviaService triviaService) {
+        this.userService = userService;
+        this.triviaService = triviaService;
+    }
+
+    @PostMapping("/start")
+    public ResponseEntity<UserDto> startQuiz(@RequestBody InitialUser initialUser) {
+        return ResponseEntity.ok(userService.createUser(initialUser));
+    }
+
+    @GetMapping("/question")
+    public ResponseEntity<Question> getQuestion(@RequestHeader("sessionId") UUID sessionId) {
+        Question question = triviaService.getNextQuestion(sessionId);
+        return ResponseEntity.ok(question);
+    }
+
+    @PostMapping("/answer")
+    public ResponseEntity<QuestionAnswer> answerQuestion(@RequestHeader("sessionId") UUID sessionId,
+                                                         @RequestBody Answer answer) {
+        boolean correct = triviaService.markQuestionAsAnswered(sessionId, answer.getQuestionId(), answer.getAnswer());
+        userService.updateUserScore(String.valueOf(sessionId), correct, (long) answer.getQuestionId());
+        QuestionAnswer qa = new QuestionAnswer(answer.getQuestionId(), correct);
+        return ResponseEntity.ok(qa);
+    }
+
+    @GetMapping("/results")
+    public ResponseEntity<UserDto> getQuizResults(@RequestHeader("sessionId") UUID sessionId) {
+        return ResponseEntity.ok(userService.getUserBySession(String.valueOf(sessionId)));
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Error> handleException(Exception e) {
+        Error error = new Error(e.getMessage());
+        return ResponseEntity.internalServerError().body(error);
+    }
+}

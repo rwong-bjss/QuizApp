@@ -9,3 +9,6 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+trivia:
+  api:
+    url: "https://opentdb.com/api.php?amount=20&category=9&difficulty=easy&type=multiple"

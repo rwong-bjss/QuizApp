@@ -1,6 +1,8 @@
 package org.example.mapper;
 
 import java.util.ArrayList;
+import org.example.entity.StoredQuestion;
+import org.example.model.Question;
 import org.example.model.UserEntity;
 import org.example.dto.UserDto;
 import org.mapstruct.Mapper;

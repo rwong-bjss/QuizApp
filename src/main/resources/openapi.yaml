@@ -62,7 +62,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /quiz/answer:
+  /quiz/answer/{questionId}:
     post:
       summary: Post a quiz answer
       operationId: postQuizAnswer
@@ -158,8 +158,8 @@ components:
           type: integer
           description: unique identifier of the question
         correct_answer:
-          type: string
-          description: the correct answer
+          type: boolean
+          description: whether the answer is correct or not
     
     InitialUser:
       type: object

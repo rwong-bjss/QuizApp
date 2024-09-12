@@ -1,4 +1,4 @@
-package org.example.models;
+package org.example.model;
 
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -9,10 +9,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Question {
-    private Integer id;
+    private Long id;
     private String type;
+    private String difficulty;
     private String category;
     private String question;
     private List<String> options;
-    private Integer number;
+    // You might want to remove correctAnswer from here if you don't want to expose it directly
 }

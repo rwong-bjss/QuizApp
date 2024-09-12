@@ -144,3 +144,7 @@ To interact with the PostgreSQL database running in your Kubernetes cluster, fol
 Remember to replace `user` and `userdb` with your actual PostgreSQL username and database name if they're different from the defaults used in the setup.
 
 Note: These instructions assume that your Kubernetes cluster and PostgreSQL deployment are set up correctly. Make sure you have the necessary permissions to execute these commands in your cluster.
+
+Exposing the postgres db in the pod:
+
+```kubectl port-forward pod/<podname> 5432:5432```
