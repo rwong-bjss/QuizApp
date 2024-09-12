@@ -39,6 +39,7 @@ public class QuizController {
     @PostMapping("/answer")
     public ResponseEntity<QuestionAnswer> answerQuestion(@RequestHeader("sessionId") UUID sessionId,
                                                          @RequestBody Answer answer) {
+        // fix this so we know the correct answer.
         boolean correct = triviaService.markQuestionAsAnswered(sessionId, answer.getQuestionId(), answer.getAnswer());
         userService.updateUserScore(String.valueOf(sessionId), correct, (long) answer.getQuestionId());
         QuestionAnswer qa = new QuestionAnswer(answer.getQuestionId(), correct);

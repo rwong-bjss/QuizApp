@@ -135,9 +135,9 @@ components:
           items:
             type: string
           description: answer options
-        number:
-          type: integer
-          description: which question number it is
+        difficulty:
+          type: string
+          description: easy, medium, hard
       required:
         - id
         - type
