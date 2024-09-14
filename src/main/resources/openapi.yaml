@@ -62,7 +62,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /quiz/answer/{questionId}:
+  /quiz/answer:
     post:
       summary: Post a quiz answer
       operationId: postQuizAnswer
